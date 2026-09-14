@@ -27,7 +27,10 @@ it('creates a transfer', function () {
     ));
 
     expect($transfer->id)->toBe(987)
-        ->and($transfer->sourceAmount)->toBe(100.0);
+        ->and($transfer->source->amount)->toBe(100.0)
+        ->and($transfer->source->currency)->toBe('GBP')
+        ->and($transfer->target->amount)->toBe(125.0)
+        ->and($transfer->target->currency)->toBe('USD');
 });
 
 it('throws a sca challenge exception when funding requires strong customer authentication', function () {

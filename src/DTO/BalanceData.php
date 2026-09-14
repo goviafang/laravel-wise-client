@@ -10,8 +10,7 @@ final class BalanceData
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $currency,
-        public readonly float $amount,
+        public readonly Money $money,
         public readonly string $type,
     ) {}
 
@@ -24,8 +23,10 @@ final class BalanceData
 
         return new self(
             id: Caster::int($data['id'] ?? null),
-            currency: Caster::string($data['currency'] ?? null),
-            amount: Caster::float($amount['value'] ?? null),
+            money: new Money(
+                amount: Caster::float($amount['value'] ?? null),
+                currency: Caster::string($data['currency'] ?? null),
+            ),
             type: Caster::string($data['type'] ?? null),
         );
     }

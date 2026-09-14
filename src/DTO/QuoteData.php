@@ -10,10 +10,8 @@ final class QuoteData
 {
     public function __construct(
         public readonly string $id,
-        public readonly string $sourceCurrency,
-        public readonly string $targetCurrency,
-        public readonly float $sourceAmount,
-        public readonly float $targetAmount,
+        public readonly Money $source,
+        public readonly Money $target,
         public readonly float $rate,
         public readonly string $status,
     ) {}
@@ -25,10 +23,14 @@ final class QuoteData
     {
         return new self(
             id: Caster::string($data['id'] ?? null),
-            sourceCurrency: Caster::string($data['sourceCurrency'] ?? null),
-            targetCurrency: Caster::string($data['targetCurrency'] ?? null),
-            sourceAmount: Caster::float($data['sourceAmount'] ?? null),
-            targetAmount: Caster::float($data['targetAmount'] ?? null),
+            source: new Money(
+                amount: Caster::float($data['sourceAmount'] ?? null),
+                currency: Caster::string($data['sourceCurrency'] ?? null),
+            ),
+            target: new Money(
+                amount: Caster::float($data['targetAmount'] ?? null),
+                currency: Caster::string($data['targetCurrency'] ?? null),
+            ),
             rate: Caster::float($data['rate'] ?? null),
             status: Caster::string($data['status'] ?? null),
         );

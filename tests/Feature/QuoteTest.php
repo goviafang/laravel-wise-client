@@ -27,7 +27,9 @@ it('creates a quote', function () {
     ));
 
     expect($quote->id)->toBe('quote-uuid')
-        ->and($quote->rate)->toBe(1.25);
+        ->and($quote->rate)->toBe(1.25)
+        ->and($quote->source->amount)->toBe(100.0)
+        ->and($quote->target->currency)->toBe('USD');
 
     Http::assertSent(fn ($request) => $request->url() === 'https://api.wise-sandbox.com/2026Q3/profiles/123/quotes'
         && $request['sourceCurrency'] === 'GBP'
