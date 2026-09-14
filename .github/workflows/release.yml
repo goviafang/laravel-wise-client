@@ -1,0 +1,100 @@
+name: Release & Semantic Versioning
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - major
+          - minor
+          - patch
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Next Version
+        id: semver
+        env:
+          INPUT_BUMP: ${{ github.event.inputs.bump_type }}
+        run: |
+          set -euo pipefail
+
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            BASE_VERSION="0.0.0"
+            IS_FIRST_TAG=true
+          else
+            BASE_VERSION="${LATEST_TAG#v}"
+            IS_FIRST_TAG=false
+          fi
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-1}
+          PATCH=${PATCH:-0}
+
+          if [ "$IS_FIRST_TAG" = "true" ]; then
+            COMMIT_RANGE="HEAD"
+          else
+            COMMIT_RANGE="$LATEST_TAG..HEAD"
+          fi
+
+          BUMP="${INPUT_BUMP:-auto}"
+
+          if [ "$BUMP" = "auto" ] || [ -z "$BUMP" ]; then
+            COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"%s%n%b" 2>/dev/null || git log -n 1 --pretty=format:"%s%n%b")
+
+            if echo "$COMMITS" | grep -q -E '^[a-zA-Z]+(\([^\)]+\))?!:|^(BREAKING CHANGE|BREAKING-CHANGE):'; then
+              BUMP="major"
+            elif echo "$COMMITS" | grep -q -E '^feat(\([^\)]+\))?:'; then
+              BUMP="minor"
+            else
+              BUMP="patch"
+            fi
+          fi
+
+          case "$BUMP" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+          echo "New release tag: $NEW_TAG"
+          echo "tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_TAG: ${{ steps.semver.outputs.tag }}
+        run: |
+          gh release create "$NEW_TAG" \
+            --title "$NEW_TAG" \
+            --generate-notes

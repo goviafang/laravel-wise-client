@@ -1,0 +1,59 @@
+{
+    "name": "goviafang/lib-wise-client",
+    "description": "A Laravel client for the Wise Platform API",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["laravel", "wise", "transferwise", "payments", "api-client"],
+    "authors": [
+        {
+            "name": "Govia Fang"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^2.0",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "Govia\\WiseClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Govia\\WiseClient\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Govia\\WiseClient\\WiseServiceProvider"
+            ],
+            "aliases": {
+                "Wise": "Govia\\WiseClient\\Facades\\Wise"
+            }
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "stan": "phpstan analyse",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
