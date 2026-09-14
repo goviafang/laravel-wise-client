@@ -14,7 +14,7 @@ Full details in the [Authentication](authentication.md) page.
 ## Requirements
 
 - PHP 8.2+
-- Laravel 10, 11, or 12
+- Laravel 12
 
 ## Install
 
