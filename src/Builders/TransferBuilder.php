@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Govia\WiseClient\Builders;
 
-use Govia\WiseClient\Commands\Transfer\CreateTransferCommand;
-use Govia\WiseClient\Commands\Transfer\FundTransferCommand;
 use Govia\WiseClient\DTO\CreateQuoteData;
 use Govia\WiseClient\DTO\CreateTransferData;
 use Govia\WiseClient\DTO\QuoteData;
 use Govia\WiseClient\DTO\TransferData;
 use Govia\WiseClient\Http\HttpClientInterface;
 use Govia\WiseClient\Resources\QuoteResource;
+use Govia\WiseClient\Resources\TransferResource;
 use RuntimeException;
 
 /**
@@ -58,7 +57,9 @@ final class TransferBuilder
             throw new RuntimeException('Call quote() and recipient() before create().');
         }
 
-        $transfer = (new CreateTransferCommand($this->http))->execute(new CreateTransferData(
+        $transfers = new TransferResource($this->http);
+
+        $transfer = $transfers->create(new CreateTransferData(
             quoteId: $this->quote->id,
             targetRecipientId: $this->recipientId,
             customerTransactionId: $customerTransactionId,
@@ -66,7 +67,7 @@ final class TransferBuilder
         ));
 
         if ($this->shouldFund) {
-            (new FundTransferCommand($this->http))->execute($this->profileId, $transfer->id);
+            $transfers->fund($this->profileId, $transfer->id);
         }
 
         return $transfer;
