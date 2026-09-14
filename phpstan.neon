@@ -1,0 +1,11 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+    tmpDir: build/phpstan
+    typeAliases:
+        WiseAuthConfig: 'array{driver: string, personal_token: array{token: string|null}, client_credentials: array{client_id: string|null, client_secret: string|null}, user_token: array{client_id: string|null, client_secret: string|null, redirect_uri: string|null, token_repository: string|null}}'
+        WiseConfig: 'array{environment: string, servers: array<string, string>, api_version: string, auth: WiseAuthConfig, webhook: array{public_key: string|null}, http: array{timeout: int, retry: array{enabled: bool, max_attempts: int}}}'
