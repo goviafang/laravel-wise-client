@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Govia\WiseClient\Http\Pagination;
 
-use Govia\WiseClient\Http\PaginationStrategy;
 use Govia\WiseClient\Http\Response;
 use Govia\WiseClient\Support\Caster;
 
-final class OffsetPagination implements PaginationStrategy
+final class OffsetPagination extends AbstractPagination
 {
     public function __construct(
-        private readonly ?string $itemsKey = null,
+        ?string $itemsKey = null,
         private readonly int $limit = 100,
-    ) {}
+    ) {
+        parent::__construct($itemsKey);
+    }
 
     public function initialParams(): array
     {
@@ -29,12 +30,5 @@ final class OffsetPagination implements PaginationStrategy
         }
 
         return ['limit' => $this->limit, 'offset' => Caster::int($previousParams['offset'] ?? null) + $this->limit];
-    }
-
-    public function extractItems(Response $response): array
-    {
-        return $this->itemsKey === null
-            ? Caster::listOfArrays($response->json)
-            : Caster::listOfArrays($response->json[$this->itemsKey] ?? null);
     }
 }
