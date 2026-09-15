@@ -1,4 +1,4 @@
-# lib-wise-client
+# laravel-wise-client
 
 給 Laravel 用的 [Wise Platform API](https://wise.com) client，涵蓋核心匯款流程：profile、quote、recipient、transfer、balance、activity、匯率查詢與 webhook。
 
@@ -27,7 +27,7 @@ English documentation: [README.md](README.md)。
 ## 安裝
 
 ```bash
-composer require goviafang/lib-wise-client
+composer require goviafang/laravel-wise-client
 ```
 
 發布設定檔：

@@ -1,4 +1,4 @@
-# lib-wise-client
+# laravel-wise-client
 
 A Laravel client for the [Wise Platform API](https://wise.com). Covers the core money-movement flow — profiles, quotes, recipients, transfers, balances, activity, exchange rates, and webhooks.
 
@@ -27,7 +27,7 @@ Signatures are RSA/SHA256 over the raw body. Check the current sandbox/productio
 ## Install
 
 ```bash
-composer require goviafang/lib-wise-client
+composer require goviafang/laravel-wise-client
 ```
 
 Publish the config file:

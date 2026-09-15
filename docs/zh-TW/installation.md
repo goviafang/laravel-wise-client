@@ -19,7 +19,7 @@
 ## 安裝
 
 ```bash
-composer require goviafang/lib-wise-client
+composer require goviafang/laravel-wise-client
 ```
 
 Service provider 跟 `Wise` facade 會自動被 Laravel 探索到，不用手動註冊。想直接改設定檔而不是全靠環境變數的話，發布出來：

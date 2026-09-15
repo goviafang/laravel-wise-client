@@ -19,7 +19,7 @@ Full details in the [Authentication](authentication.md) page.
 ## Install
 
 ```bash
-composer require goviafang/lib-wise-client
+composer require goviafang/laravel-wise-client
 ```
 
 The service provider and `Wise` facade are auto-discovered. Publish the config file if you want to edit it directly instead of relying on environment variables:
